@@ -24,7 +24,7 @@
     "eslint-plugin-import": "^2.14.0"
   },
   "bin": {
-    "setVersion": ".build/index.js",
-    "set-version": ".build/index.js"
+    "setVersion": ".src/index.js",
+    "set-version": ".src/index.js"
   }
 }
