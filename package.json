@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "description": "Set the version in package.json, android/app/build.gradle",
   "bin": {
-    "setVersion": ".src/index.js",
-    "set-version": ".src/index.js"
+    "setVersion": "./src/index.js",
+    "set-version": "./src/index.js"
   },
   "main": "index.js",
   "author": "Novom Interactive",
