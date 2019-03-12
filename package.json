@@ -9,7 +9,6 @@
   "main": "index.js",
   "author": "Novom Interactive",
   "scripts": {
-    "prepare": "yarn build",
     "start": "node .src/index.js",
     "build": "babel src --out-dir build"
   },
