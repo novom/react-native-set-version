@@ -6,6 +6,7 @@
   "author": "Novom Interactive",
   "license": "UNLICENSED",
   "scripts": {
+    "prepare": "yarn build",
     "start": "node .src/index.js",
     "build": "babel src --out-dir build"
   },
