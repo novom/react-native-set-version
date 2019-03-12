@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import AndroidManifest from 'manifest-android';
 import chalk from 'chalk';
 import fs from 'fs';
