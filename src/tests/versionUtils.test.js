@@ -37,10 +37,10 @@ const version10_12_3 = {
 describe('versionStringToVersion:', () => {
   it('Should match version0_4_0_2 object when version string is 0.4.0, current version is 0.4.0 and current version code is 4001', () => {
     expect(versionStringToVersion(
-          version0_4_0_2String,
-          version0_4_0,
-          4001,
-        )).toEqual(version0_4_0_2);
+      version0_4_0_2String,
+      version0_4_0,
+      4001,
+    )).toEqual(version0_4_0_2);
   });
 
   it('Should match version1_5_2 object when version string is 1.5.2', () => {
