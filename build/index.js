@@ -41,7 +41,7 @@ function versionPackage(versionText) {
     _fs.default.writeFileSync(paths.packageJson, `${JSON.stringify(packageJSON, null, '\t')}\n`);
 
     display(_chalk.default.green(`Version replaced in ${_chalk.default.bold('package.json')}`));
-  } catch {
+  } catch (err) {
     display(_chalk.default.red(`ERROR: Cannot find file with name ${_path.default.resolve(paths.packageJson)}`));
     process.exit(1);
   }
@@ -72,7 +72,7 @@ async function getAndroidVersionInfo(versionText) {
       version,
       versionCode: (0, _versionUtils.versionToVersionCode)(version)
     };
-  } catch {
+  } catch (err) {
     display(_chalk.default.yellowBright(`WARNING: Cannot find attribute android:versionCode in file ${_path.default.resolve(paths.buildGradle)}. Android version configuration will be skipped`));
   }
 
@@ -89,7 +89,7 @@ function versionAndroid(versionText, versionCode) {
       _fs.default.writeFileSync(paths.buildGradle, newBuildGradle, 'utf8');
 
       display(_chalk.default.green(`Version replaced in ${_chalk.default.bold('build.gradle')}`));
-    } catch {
+    } catch (err) {
       display(_chalk.default.yellowBright(`WARNING: Cannot find file with name ${_path.default.resolve(paths.buildGradle)}. this file is skipped`));
     }
 
@@ -101,7 +101,7 @@ function versionAndroid(versionText, versionCode) {
       _fs.default.writeFileSync(paths.androidManifest, newAndroidManifest, 'utf8');
 
       display(_chalk.default.green(`Version replaced in ${_chalk.default.bold('AndroidManifest.xml')}`));
-    } catch {
+    } catch (err) {
       display(_chalk.default.yellowBright(`WARNING: Cannot find file with name ${_path.default.resolve(paths.androidManifest)}. this file is skipped`));
     }
   }
