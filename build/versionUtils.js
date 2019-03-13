@@ -44,7 +44,9 @@ const versionToVersionCode = version => {
   const major = pad(version.major, 2);
   const minor = pad(version.minor, 2);
   const patch = pad(version.patch, 2);
-  const build = version.build;
+  const {
+    build
+  } = version;
   return +`${major}${minor}${patch}${build}`;
 };
 
