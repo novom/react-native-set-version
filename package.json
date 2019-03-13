@@ -36,8 +36,8 @@
     "build": "babel src --out-dir build --ignore \"src/**/*.spec.js\",\"src/**/*.test.js\"",
     "lint": "eslint .",
     "start": "node .src/index.js",
-    "test": "yarn lint & yarn unitTest",
-    "unitTest": "jest --runInBand"
+    "test": "yarn lint & yarn unitTests",
+    "unitTests": "jest --runInBand"
   },
   "dependencies": {
     "chalk": "^2.4.2",
