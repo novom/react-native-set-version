@@ -3,8 +3,11 @@
 import AndroidManifest from 'manifest-android';
 import chalk from 'chalk';
 import fs from 'fs';
+import path from 'path';
 
 import { versionStringToVersion, versionToVersionCode } from './versionUtils';
+
+const display = console.log; // eslint-disable-line no-console
 
 const paths = {
   packageJson: './package.json',
@@ -12,9 +15,9 @@ const paths = {
   androidManifest: './android/app/src/main/AndroidManifest.xml',
 };
 
-const loadManifest = (manifest, path) => (
+const loadManifest = (manifest, filePath) => (
   new Promise((resolve, reject) => {
-    manifest.load(path, (err, man) => {
+    manifest.load(filePath, (err, man) => {
       if (err) {
         return reject(err);
       }
@@ -23,9 +26,20 @@ const loadManifest = (manifest, path) => (
   })
 );
 
-const changeVersion = async () => {
-  const display = console.log; // eslint-disable-line no-console
+function versionPackage(versionText) {
+  let packageJSON = null;
+  try {
+    packageJSON = JSON.parse(fs.readFileSync(paths.packageJson));
+    packageJSON.version = versionText;
+    fs.writeFileSync(paths.packageJson, `${JSON.stringify(packageJSON, null, '\t')}\n`);
+    display(chalk.green(`Version replaced in ${chalk.bold('package.json')}`));
+  } catch {
+    display(chalk.red(`ERROR: Cannot find file with name ${path.resolve(paths.packageJson)}. package.json and ios/<project-name>/info.plist will be skipped`));
+  }
+  return packageJSON;
+}
 
+const changeVersion = async () => {
   const versionText = process.argv[2];
   const manifest = await loadManifest(new AndroidManifest(), { file: paths.androidManifest });
   const currentVersionCode = +(manifest._xml.attributes['android:versionCode']); // eslint-disable-line no-underscore-dangle
@@ -47,12 +61,7 @@ const changeVersion = async () => {
 
   display('');
 
-  const packageJSON = JSON.parse(fs.readFileSync(paths.packageJson));
-
-  packageJSON.version = versionText;
-
-  fs.writeFileSync(paths.packageJson, `${JSON.stringify(packageJSON, null, '\t')}\n`);
-  display(chalk.green(`Version replaced in ${chalk.bold('package.json')}`));
+  const appName = versionPackage().name;
 
   const buildGradle = fs.readFileSync(paths.buildGradle, 'utf8');
 
