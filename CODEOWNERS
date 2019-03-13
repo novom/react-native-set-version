@@ -1,0 +1,4 @@
+# These owners will be the default owners for everything in the repo.
+# They will be automatically added as reviewers on pull requests in
+# this repository.
+* @ssideleau @plbrault 
