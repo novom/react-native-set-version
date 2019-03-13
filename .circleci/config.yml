@@ -1,0 +1,35 @@
+aliases:
+  - &restore-node-modules
+    key: dependency-cache-{{ checksum "yarn.lock" }}
+
+  - &save-node-modules
+    key: dependency-cache-{{ checksum "yarn.lock" }}
+    paths:
+      - ~/.yarn-cache
+      - ./node_modules
+version: 2
+jobs:
+  build:
+    working_directory: ~/react-native-set-version
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - restore_cache: *restore-node-modules
+      - run:
+          name: Install Dependencies
+          command: yarn --cache-folder="/home/circleci/.yarn-cache" --frozen-lockfile
+      - save_cache: *save-node-modules
+      - run: *create-dev-settings
+      - run:
+          name: Run linter
+          command: yarn lint
+      - run:
+         name: Run tests
+         command: yarn unitTests
+
+workflows:
+  version: 2
+  untagged-build:
+    jobs:
+      - build

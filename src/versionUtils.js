@@ -1,10 +1,9 @@
 const pad = (stringToPad, width, paddingCharacter) => {
   const padChar = paddingCharacter || '0';
   const toPad = stringToPad.toString();
-  return toPad.length >= width ?
-    toPad
-    :
-    new Array((width - toPad.length) + 1).join(padChar) + toPad;
+  return toPad.length >= width
+    ? toPad
+    : new Array((width - toPad.length) + 1).join(padChar) + toPad;
 };
 
 const trimText = (s) => {
@@ -19,9 +18,9 @@ const trimText = (s) => {
 };
 
 const versionEquals = (versionA, versionB) => (
-  versionA.major === versionB.major &&
-  versionA.minor === versionB.minor &&
-  versionA.patch === versionB.patch
+  versionA.major === versionB.major
+  && versionA.minor === versionB.minor
+  && versionA.patch === versionB.patch
 );
 
 const versionStringToVersion = (versionString, currentVersion, currentVersionCode) => {
@@ -47,7 +46,8 @@ const versionToVersionCode = (version) => {
   const major = pad(version.major, 2);
   const minor = pad(version.minor, 2);
   const patch = pad(version.patch, 2);
-  const build = version.build;
+  const { build } = version;
+
   return +(`${major}${minor}${patch}${build}`);
 };
 
