@@ -1,11 +1,11 @@
 const presets = [
   [
-    "@babel/env",
+    '@babel/env',
     {
       targets: {
         node: true,
       },
-      useBuiltIns: "usage",
+      useBuiltIns: 'usage',
     },
   ],
 ];
