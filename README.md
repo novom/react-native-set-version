@@ -9,7 +9,7 @@ React Native Set Version is a tool that lets you set your version easily trough 
 
 ## Package
 
-For the package React Native Set Version will modify the **version** in `package.json`
+For the package React Native Set Version will modify the **version** in `package.json`.
 
 ## Android
 
@@ -23,7 +23,7 @@ For IOS React Native Set Version will modify the **CFBundleShortVersionString** 
 
 Version Code and CFBundleVersion are used as build numbers this is useful when you have multiple versions with the same major, minor and patch, i.e versions `1.0.0-RC.1` and `1.0.0-RC.2` have the same major, minor and patch but their build numbers are different.
 
-React Native Set Version will increment those build numbers if the `\<version\>` argument match the current version.
+React Native Set Version will increment those build numbers if the `<version>` argument match the current version.
 
 Example:
 
