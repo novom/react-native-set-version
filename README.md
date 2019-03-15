@@ -1,10 +1,46 @@
 # React Native Set Version
 
-React Native Set Version is a tool that let you set your version easily trough your react-native application. It will modify the following files if found:
+React Native Set Version is a tool that lets you set your version easily trough your react-native application. It will modify the following files if found:
 
 - **./package.json**
 - **./android/app/src/main/AndroidManifest.xml**
 - **./android/app/build.gradle**
+- **./ios/<app_name>/Info.plist**
+
+## Package
+
+For the package React Native Set Version will modify the **version** in `package.json`
+
+## Android
+
+For Android React Native Set Version will modify the **version name** and the **version code** in both `build.gradle` and `AndroidManifest.xml`.
+
+## IOS
+
+For IOS React Native Set Version will modify the **CFBundleShortVersionString** and the **CFBundleVersion** in `Info.plist`.
+
+## Version Code and CFBundleVersion
+
+Version Code and CFBundleVersion are used as build numbers this is useful when you have multiple versions with the same major, minor and patch, i.e versions `1.0.0-RC.1` and `1.0.0-RC.2` have the same major, minor and patch but their build numbers are different.
+
+React Native Set Version will increment those build numbers if the `\<version\>` argument match the current version.
+
+Example:
+
+```bash
+$ yarn set-version 1.0.0-RC.1
+# Output
+# ...
+# Will set android version code to 100001
+# ...
+# Will set CFBundleVersion to 1.0.0.1
+$ yarn set-version 1.0.0-RC.2
+# Output
+# ...
+# Will set android version code to 100002
+# ...
+# Will set CFBundleVersion to 1.0.0.2
+```
 
 ## Installation and Usage
 

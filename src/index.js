@@ -55,13 +55,14 @@ function getIOSVersionInfo(versionText) {
   try {
     const plistInfo = plist.parse(fs.readFileSync(paths.infoPlist, 'utf8'));
     const currentVersion = versionStringToVersion(plistInfo.CFBundleShortVersionString);
-    const currentVersionCode = +(plistInfo.CFBundleVersion);
+    const versionCodeParts = plistInfo.CFBundleVersion.toString().split('.');
+    const currentVersionCode = +(versionCodeParts[versionCodeParts.length - 1]);
     const version = versionStringToVersion(versionText, currentVersion, currentVersionCode);
     versionInfo = {
       currentVersionCode,
       currentVersion,
       version,
-      versionCode: versionToVersionCode(version),
+      versionCode: version.build,
     };
   } catch (err) {
     display(chalk.yellowBright(`${chalk.bold.underline('WARNING:')} Cannot find key CFBundleShortVersionString in file ${path.resolve(paths.infoPlist)}. IOS version configuration will be skipped`));
@@ -70,22 +71,23 @@ function getIOSVersionInfo(versionText) {
 }
 
 async function versionIOS(versionText) {
-  const { version, versionCode } = await getIOSVersionInfo(versionText);
-  if (versionCode) {
+  const { version } = await getIOSVersionInfo(versionText);
+  const bundleVersion = `${version.major}.${version.minor}.${version.patch}.${version.build}`;
+  if (version) {
     display('');
     display(chalk.yellow('IOS version info:'));
     display(version);
 
     display('');
 
-    display(chalk.yellow(`Will set IOS version to ${chalk.bold.underline(versionText)}`));
-    display(chalk.yellow(`Will set IOS version code to ${chalk.bold.underline(versionCode)}`));
+    display(chalk.yellow(`Will set CFBundleShortVersionString to ${chalk.bold.underline(versionText)}`));
+    display(chalk.yellow(`Will set CFBundleVersion to ${chalk.bold.underline(bundleVersion)}`));
     try {
       const plistInfo = plist.parse(fs.readFileSync(paths.infoPlist, 'utf8'));
-      plist.CFBundleShortVersionString = versionText;
-      plist.CFBundleVersion = versionCode;
-      fs.writeFileSync(paths.plistInfo, plist.build(plistInfo), 'utf8');
-      display(chalk.green(`Version replaced in ${chalk.bold('build.gradle')}`));
+      plistInfo.CFBundleShortVersionString = versionText;
+      plistInfo.CFBundleVersion = bundleVersion;
+      fs.writeFileSync(paths.infoPlist, plist.build(plistInfo), 'utf8');
+      display(chalk.green(`Version replaced in ${chalk.bold('Info.plist')}`));
     } catch (err) {
       display(chalk.yellowBright(`${chalk.bold.underline('WARNING:')} Cannot find file with name ${path.resolve(paths.infoPlist)}. this file is skipped`));
     }
