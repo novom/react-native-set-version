@@ -4,7 +4,7 @@ import AndroidManifest from 'manifest-android';
 import chalk from 'chalk';
 import fs from 'fs';
 import path from 'path';
-import plist from 'plist'
+import plist from 'plist';
 
 import { versionStringToVersion, versionToVersionCode } from './versionUtils';
 
@@ -160,7 +160,7 @@ const changeVersion = async () => {
 
   const appName = versionPackage(versionText).name;
 
-  paths.infoPlist = paths.infoPlist.replace('<APP_NAME>', appName)
+  paths.infoPlist = paths.infoPlist.replace('<APP_NAME>', appName);
 
   await versionAndroid(versionText);
 
