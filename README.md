@@ -106,6 +106,10 @@ $ set-version <version>
 
 **Note**: The version number must follow [semver](https://semver.org/)
 
+## License
+
+This software uses the MIT license for more information see the [license.txt](license.txt) file.
+
 ## Contributing
 
 **Never** commit directly on master, instead use branches, forks and pull requests.

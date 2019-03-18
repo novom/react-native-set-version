@@ -28,7 +28,7 @@ const loadManifest = (manifest, filePath) => (
   })
 );
 
-function versionPackage(versionText) {
+function setPackageVersion(versionText) {
   let packageJSON = null;
   try {
     packageJSON = JSON.parse(fs.readFileSync(paths.packageJson));
@@ -70,7 +70,7 @@ function getIOSVersionInfo(versionText) {
   return versionInfo;
 }
 
-async function versionIOS(versionText) {
+async function setIosApplicationVersion(versionText) {
   const { version } = await getIOSVersionInfo(versionText);
   const bundleVersion = `${version.major}.${version.minor}.${version.patch}.${version.build}`;
   if (version) {
@@ -89,7 +89,7 @@ async function versionIOS(versionText) {
       fs.writeFileSync(paths.infoPlist, plist.build(plistInfo), 'utf8');
       display(chalk.green(`Version replaced in ${chalk.bold('Info.plist')}`));
     } catch (err) {
-      display(chalk.yellowBright(`${chalk.bold.underline('WARNING:')} Cannot find file with name ${path.resolve(paths.infoPlist)}. this file is skipped`));
+      display(chalk.yellowBright(`${chalk.bold.underline('WARNING:')} Cannot find file with name ${path.resolve(paths.infoPlist)}. This file will be skipped`));
     }
   }
 }
@@ -118,7 +118,7 @@ async function getAndroidVersionInfo(versionText) {
   return versionInfo;
 }
 
-async function versionAndroid(versionText) {
+async function setAndroidApplicationVersion(versionText) {
   const { version, versionCode } = await getAndroidVersionInfo(versionText);
 
   if (versionCode) {
@@ -128,8 +128,8 @@ async function versionAndroid(versionText) {
 
     display('');
 
-    display(chalk.yellow(`Will set android version to ${chalk.bold.underline(versionText)}`));
-    display(chalk.yellow(`Will set android version code to ${chalk.bold.underline(versionCode)}`));
+    display(chalk.yellow(`Will set Android version to ${chalk.bold.underline(versionText)}`));
+    display(chalk.yellow(`Will set Android version code to ${chalk.bold.underline(versionCode)}`));
     try {
       const buildGradle = fs.readFileSync(paths.buildGradle, 'utf8');
       const newBuildGradle = buildGradle.replace(/versionCode \d+/g, `versionCode ${versionCode}`)
@@ -138,7 +138,7 @@ async function versionAndroid(versionText) {
       fs.writeFileSync(paths.buildGradle, newBuildGradle, 'utf8');
       display(chalk.green(`Version replaced in ${chalk.bold('build.gradle')}`));
     } catch (err) {
-      display(chalk.yellowBright(`${chalk.bold.underline('WARNING:')} Cannot find file with name ${path.resolve(paths.buildGradle)}. this file is skipped`));
+      display(chalk.yellowBright(`${chalk.bold.underline('WARNING:')} Cannot find file with name ${path.resolve(paths.buildGradle)}. This file will be skipped`));
     }
 
     try {
@@ -150,7 +150,7 @@ async function versionAndroid(versionText) {
       fs.writeFileSync(paths.androidManifest, newAndroidManifest, 'utf8');
       display(chalk.green(`Version replaced in ${chalk.bold('AndroidManifest.xml')}`));
     } catch (err) {
-      display(chalk.yellowBright(`${chalk.bold.underline('WARNING:')} Cannot find file with name ${path.resolve(paths.androidManifest)}. this file is skipped`));
+      display(chalk.yellowBright(`${chalk.bold.underline('WARNING:')} Cannot find file with name ${path.resolve(paths.androidManifest)}. This file will be skipped`));
     }
   }
 }
@@ -158,13 +158,13 @@ async function versionAndroid(versionText) {
 const changeVersion = async () => {
   const versionText = process.argv[2];
 
-  const appName = versionPackage(versionText).name;
+  const appName = setPackageVersion(versionText).name;
 
   paths.infoPlist = paths.infoPlist.replace('<APP_NAME>', appName);
 
-  await versionAndroid(versionText);
+  await setAndroidApplicationVersion(versionText);
 
-  await versionIOS(versionText);
+  await setIosApplicationVersion(versionText);
 
   display('');
 
