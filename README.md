@@ -108,7 +108,7 @@ $ set-version <version>
 
 ## License
 
-This software uses the MIT license for more information see the [license.txt](license.txt) file.
+This software uses the MIT license. For more information see the [license.txt](license.txt) file.
 
 ## Contributing
 
