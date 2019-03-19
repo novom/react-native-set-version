@@ -1,68 +1,40 @@
-# React Native Set Version
+# react-native-set-version
 
-React Native Set Version is a tool that lets you set your version easily trough your react-native application. It will modify the following files if found:
+ [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+This tool allows you to easily update the version of a React Native application.
+It will update the following files if found:
 
 - **./package.json**
 - **./android/app/src/main/AndroidManifest.xml**
 - **./android/app/build.gradle**
 - **./ios/<app_name>/Info.plist**
 
-## Package
+## Version number format
 
-For the package React Native Set Version will modify the **version** in `package.json`.
+In order to use this package, your project version must comply with the format described on [semver.org](https://semver.org/).
 
-## Android
+## Setup and Usage
 
-For Android React Native Set Version will modify the **version name** and the **version code** in both `build.gradle` and `AndroidManifest.xml`.
+There are two ways to install react-native-set-version: globally and locally.
 
-## IOS
+### Local Installation
 
-For IOS React Native Set Version will modify the **CFBundleShortVersionString** and the **CFBundleVersion** in `Info.plist`.
-
-## Version Code and CFBundleVersion
-
-Version Code and CFBundleVersion are used as build numbers this is useful when you have multiple versions with the same major, minor and patch, i.e versions `1.0.0-RC.1` and `1.0.0-RC.2` have the same major, minor and patch but their build numbers are different.
-
-React Native Set Version will increment those build numbers if the `<version>` argument match the current version.
-
-Example:
-
-```bash
-$ yarn set-version 1.0.0-RC.1
-# Output
-# ...
-# Will set android version code to 100001
-# ...
-# Will set CFBundleVersion to 1.0.0.1
-$ yarn set-version 1.0.0-RC.2
-# Output
-# ...
-# Will set android version code to 100002
-# ...
-# Will set CFBundleVersion to 1.0.0.2
-```
-
-## Installation and Usage
-
-There are two ways to install React Native Set Version: globally and locally.
-
-### Local Installation and Usage
-
-This is the recommended way to install React Native Set Version.
+This is the recommended way to install react-native-set-version.
 
 npm:
 
 ```bash
-$ npm install react-native-set-version --save-dev
+npm install react-native-set-version --save-dev
 ```
 
 yarn:
 
 ```bash
-$ yarn add react-native-set-version --dev
+yarn add react-native-set-version --dev
 ```
 
-After that, you can run React Native Set Version in your projet directory like this:
+You can then use this command in your project directory to run react-native-set-version:
 
 npm:
 
@@ -80,44 +52,93 @@ $ yarn setVersion <version>
 $ yarn set-version <version>
 ```
 
-### Global Installation and Usage
+### Global Installation
 
-Use React Native Set Version in any project.
+This installation method allows you to use react-native-set-version in any project.
 
 npm:
 
 ```bash
-$ npm install -g react-native-set-version
+npm install -g react-native-set-version
 ```
 
 yarn:
 
 ```bash
-$ yarn global add react-native-set-version
+yarn global add react-native-set-version
 ```
 
-After that, you can run React Native Set Version in your project directory like this:
+You can then use this command in your project directory to run react-native-set-version:
 
 ```bash
-$ setVersion <version>
+setVersion <version>
 -- or --
-$ set-version <version>
+set-version <version>
 ```
 
-**Note**: The version number must follow [semver](https://semver.org/)
+## Behaviour
+
+When invoked, react-native-set-version will make the following changes to your project files:
+
+### Update Package Version
+
+The **version** attribute in `package.json` will be updated with the specified version.
+
+### Update Android Project Version
+
+It will update the **version name** and the **version code** in both `build.gradle` and `AndroidManifest.xml`.
+
+### Update iOS Project Version
+
+It will update the **CFBundleShortVersionString** and the **CFBundleVersion** in `Info.plist`.
+
+### How the version code and CFBundleVersion are updated
+
+The Android version code represents your version number as an integer. This
+package uses the following format to generate this integer:
+
+```
+<MAJOR><MINOR ON 2 DIGITS><PATCH ON 2 DIGITS><BUILD NUMBER>
+```
+
+For instance, the first time you call `set-version 3.1.4`, it will produce the version code `301041`.
+
+If you call the command with the same version a second time, it will increment the build number, to produce `301042`.
+
+This also applies if, for instance, you call `set-version 3.1.4-rc.1`, and then `set-version 3.1.4-rc.2`.
+
+As for the `CFBundleVersion` on iOS, it will produce a string in the format `<MAJOR>.<MINOR>.<PATCH>.<BUILD NUMBER>`.
+
+Example:
+
+```bash
+$ yarn set-version 1.0.0-rc.1
+# Output
+# ...
+# Will set android version code to 100001
+# ...
+# Will set CFBundleVersion to 1.0.0.1
+$ yarn set-version 1.0.0-rc.2
+# Output
+# ...
+# Will set android version code to 100002
+# ...
+# Will set CFBundleVersion to 1.0.0.2
+$ yarn set-version 1.0.0
+# Output
+# ...
+# Will set android version code to 100003
+# ...
+# Will set CFBundleVersion to 1.0.0.3
+```
 
 ## License
 
-This software uses the MIT license. For more information see the [LICENSE.txt](LICENSE.txt) file.
+This software uses the [MIT license](LICENSE.txt).
 
 ## Contributing
 
-**Never** commit directly on master, instead use branches, forks and pull requests.
-
-Once approved, a Pull request is merged in `master` by its author. Also, it must be squashed before merging,
-either manually or using GitHub's `Squash and merge` feature.
-
-You must use the following Style Guides :
+You must use the following style guide:
 
 - [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript)
 
