@@ -35,9 +35,9 @@ const versionStringToVersion = (versionString, currentVersion, currentVersionCod
   }
 
   return {
-    major: +trimText(versionParts[0]),
-    minor: +trimText(versionParts[1]),
-    patch: +trimText(versionParts[2]),
+    major: +trimText(versionParts[0] || '0'),
+    minor: +trimText(versionParts[1] || '1'),
+    patch: +trimText(versionParts[2] || '0'),
     build,
   };
 };
