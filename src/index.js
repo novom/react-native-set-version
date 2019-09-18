@@ -11,9 +11,10 @@ import { versionStringToVersion, versionToVersionCode } from './versionUtils';
 const display = console.log; // eslint-disable-line no-console
 
 const paths = {
-  packageJson: './package.json',
+  androidManifest: './android/app/src/main/AndroidManifest.xml',
   buildGradle: './android/app/build.gradle',
   infoPlist: './ios/<APP_NAME>/Info.plist',
+  packageJson: './package.json',
 };
 
 function setPackageVersion(versionText) {
@@ -127,6 +128,19 @@ async function setAndroidApplicationVersion(versionText) {
       display(chalk.green(`Version replaced in ${chalk.bold('build.gradle')}`));
     } catch (err) {
       display(chalk.yellowBright(`${chalk.bold.underline('WARNING:')} Cannot find file with name ${path.resolve(paths.buildGradle)}. This file will be skipped`));
+    }
+
+    try {
+      const androidManifest = fs.readFileSync(paths.androidManifest, 'utf8');
+      if (androidManifest.includes('android:versionCode') || androidManifest.includes('android:versionName')) {
+        const newAndroidManifest = androidManifest.replace(/android:versionCode="\d*"/g, `android:versionCode="${versionCode}"`)
+          .replace(/android:versionName="[^"]*"/g, `android:versionName="${versionText}"`);
+
+        fs.writeFileSync(paths.androidManifest, newAndroidManifest, 'utf8');
+        display(chalk.green(`Version replaced in ${chalk.bold('AndroidManifest.xml')}`));
+      }
+    } catch (err) {
+      display(chalk.yellowBright(`${chalk.bold.underline('WARNING:')} Cannot find file with name ${path.resolve(paths.androidManifest)}. This file will be skipped`));
     }
   }
 }
