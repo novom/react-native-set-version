@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import AndroidManifest from 'manifest-android';
 import chalk from 'chalk';
 import fs from 'fs';
+import g2js from 'gradle-to-js/lib/parser';
 import path from 'path';
 import plist from 'plist';
 
@@ -11,22 +11,11 @@ import { versionStringToVersion, versionToVersionCode } from './versionUtils';
 const display = console.log; // eslint-disable-line no-console
 
 const paths = {
-  packageJson: './package.json',
-  buildGradle: './android/app/build.gradle',
   androidManifest: './android/app/src/main/AndroidManifest.xml',
+  buildGradle: './android/app/build.gradle',
   infoPlist: './ios/<APP_NAME>/Info.plist',
+  packageJson: './package.json',
 };
-
-const loadManifest = (manifest, filePath) => (
-  new Promise((resolve, reject) => {
-    manifest.load(filePath, (err, man) => {
-      if (err) {
-        return reject(err);
-      }
-      return resolve(man);
-    });
-  })
-);
 
 function setPackageVersion(versionText) {
   let packageJSON = null;
@@ -102,9 +91,9 @@ async function getAndroidVersionInfo(versionText) {
     versionCode: null,
   };
   try {
-    const manifest = await loadManifest(new AndroidManifest(), { file: paths.androidManifest });
-    const currentVersion = versionStringToVersion(manifest._xml.attributes['android:versionName']); // eslint-disable-line no-underscore-dangle
-    const currentVersionCode = +(manifest._xml.attributes['android:versionCode']); // eslint-disable-line no-underscore-dangle
+    const gradle = await g2js.parseFile(paths.buildGradle);
+    const currentVersion = gradle.android.defaultConfig.versionName;
+    const currentVersionCode = +(gradle.android.defaultConfig.versionCode);
     const version = versionStringToVersion(versionText, currentVersion, currentVersionCode);
     versionInfo = {
       currentVersionCode,
@@ -113,7 +102,7 @@ async function getAndroidVersionInfo(versionText) {
       versionCode: versionToVersionCode(version),
     };
   } catch (err) {
-    display(chalk.yellowBright(`${chalk.bold.underline('WARNING:')} Cannot find attribute android:versionCode in file ${path.resolve(paths.buildGradle)}. Android version configuration will be skipped`));
+    display(chalk.yellowBright(`${chalk.bold.underline('WARNING:')} Cannot find attribute versionCode in file ${path.resolve(paths.buildGradle)}. Android version configuration will be skipped`));
   }
   return versionInfo;
 }
@@ -143,12 +132,13 @@ async function setAndroidApplicationVersion(versionText) {
 
     try {
       const androidManifest = fs.readFileSync(paths.androidManifest, 'utf8');
+      if (androidManifest.includes('android:versionCode') || androidManifest.includes('android:versionName')) {
+        const newAndroidManifest = androidManifest.replace(/android:versionCode="\d*"/g, `android:versionCode="${versionCode}"`)
+          .replace(/android:versionName="[^"]*"/g, `android:versionName="${versionText}"`);
 
-      const newAndroidManifest = androidManifest.replace(/android:versionCode="\d*"/g, `android:versionCode="${versionCode}"`)
-        .replace(/android:versionName="[^"]*"/g, `android:versionName="${versionText}"`);
-
-      fs.writeFileSync(paths.androidManifest, newAndroidManifest, 'utf8');
-      display(chalk.green(`Version replaced in ${chalk.bold('AndroidManifest.xml')}`));
+        fs.writeFileSync(paths.androidManifest, newAndroidManifest, 'utf8');
+        display(chalk.green(`Version replaced in ${chalk.bold('AndroidManifest.xml')}`));
+      }
     } catch (err) {
       display(chalk.yellowBright(`${chalk.bold.underline('WARNING:')} Cannot find file with name ${path.resolve(paths.androidManifest)}. This file will be skipped`));
     }
