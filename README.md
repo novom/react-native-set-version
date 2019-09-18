@@ -88,6 +88,14 @@ The **version** attribute in `package.json` will be updated with the specified v
 
 It will update the **version name** and the **version code** in both `build.gradle` and `AndroidManifest.xml`.
 
+#### About AndroidManifest.xml
+
+Version information should not be in the `AndroidManifest.xml` since this information is overridden by `build.gradle`.
+
+See https://developer.android.com/studio/publish/versioning for further informations.
+
+For that reason `react-native-set-version` will only write in the `AndroidManifest.xml` if `android:versionCode` and/or `android:versionName` are already in the file.
+
 ### Update iOS Project Version
 
 It will update the **CFBundleShortVersionString** and the **CFBundleVersion** in `Info.plist`.
