@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "chalk": "^2.4.2",
+    "gradle-to-js": "^2.0.0",
     "manifest-android": "^0.1.1",
     "plist": "^3.0.1"
   },
