@@ -92,7 +92,7 @@ async function getAndroidVersionInfo(versionText) {
   };
   try {
     const gradle = await g2js.parseFile(paths.buildGradle);
-    const currentVersion = gradle.android.defaultConfig.versionName;
+    const currentVersion = versionStringToVersion(gradle.android.defaultConfig.versionName);
     const currentVersionCode = +(gradle.android.defaultConfig.versionCode);
     const version = versionStringToVersion(versionText, currentVersion, currentVersionCode);
     versionInfo = {
