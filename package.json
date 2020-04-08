@@ -1,6 +1,6 @@
 {
   "name": "react-native-set-version",
-  "version": "1.1.0",
+  "version": "1.1.1-rc.1",
   "description": "Set the version in package.json, android/app/build.gradle and info.plist",
   "license": "MIT",
   "bin": {
