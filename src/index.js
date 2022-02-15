@@ -17,10 +17,14 @@ const paths = {
   packageJson: './package.json',
 };
 
+function getPackageJson() {
+  return JSON.parse(fs.readFileSync(paths.packageJson));
+}
+
 function setPackageVersion(versionText) {
   let packageJSON = null;
   try {
-    packageJSON = JSON.parse(fs.readFileSync(paths.packageJson));
+    packageJSON = getPackageJson()
     display(chalk.yellow(`Will set package version to ${chalk.bold.underline(versionText)}`));
     packageJSON.version = versionText;
     fs.writeFileSync(paths.packageJson, `${JSON.stringify(packageJSON, null, '\t')}\n`);
@@ -29,7 +33,6 @@ function setPackageVersion(versionText) {
     display(chalk.red(`${chalk.bold.underline('ERROR:')} Cannot find file with name ${path.resolve(paths.packageJson)}`));
     process.exit(1);
   }
-  return packageJSON;
 }
 
 
@@ -147,9 +150,10 @@ async function setAndroidApplicationVersion(versionText) {
 
 const changeVersion = async () => {
   const versionText = process.argv[2];
-  const appName = setPackageVersion(versionText).name;
+  const { infoPListPath } = getPackageJson();
+  setPackageVersion(versionText);
 
-  paths.infoPlist = paths.infoPlist.replace('<APP_NAME>', appName);
+  paths.infoPlist = infoPListPath || paths.infoPlist.replace('<APP_NAME>', appName);
   await setAndroidApplicationVersion(versionText);
   await setIosApplicationVersion(versionText);
 
